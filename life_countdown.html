@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生倒计时</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+       .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+       .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+       .input-section {
+            margin-bottom: 20px;
+        }
+
+       .input-section input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+       .input-section button {
+            padding: 8px 15px;
+            cursor: pointer;
+        }
+
+       .countdown {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+       .longevity-button {
+            margin-top: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: none;
+            /* 使按钮居中 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+       /* 模态框样式 */
+       .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+       .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+        }
+
+       .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+       .close:hover,
+       .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+       .message {
+            color: #ff6600;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">人生倒计时</h1>
+        <div class="input-section">
+            <label for="age">请输入你的年龄：</label>
+            <input type="number" id="age" min="0">
+            <button onclick="calculateCountdown()">计算</button>
+        </div>
+        <p class="countdown" id="countdown"></p>
+        <button class="longevity-button" id="longevityBtn" onclick="showLongevityTip()">想要活得更久吗？</button>
+    </div>
+    <!-- 模态框 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="message" id="modalMessage"></p>
+        </div>
+    </div>
+    <script>
+        function calculateCountdown() {
+            const age = parseInt(document.getElementById('age').value);
+            if (isNaN(age) || age < 0) {
+                document.getElementById('countdown').textContent = '请输入有效的年龄。';
+                return;
+            }
+            const expectedLifeSpan = 100;
+            const currentDate = new Date();
+            const endDate = new Date(currentDate.getFullYear() + (expectedLifeSpan - age), currentDate.getMonth(), currentDate.getDate());
+
+            function updateCountdown() {
+                const now = new Date();
+                const timeLeft = endDate - now;
+
+                if (timeLeft <= 0) {
+                    document.getElementById('countdown').textContent = '人生已结束';
+                } else {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                    document.getElementById('countdown').textContent = `${days} 天 ${hours} 小时 ${minutes} 分钟 ${seconds} 秒`;
+                }
+            }
+
+            // 初始更新
+            updateCountdown();
+            // 每秒更新一次
+            setInterval(updateCountdown, 1000);
+
+            // 显示“想要活得更久吗？”按钮
+            document.getElementById('longevityBtn').style.display = 'block';
+        }
+
+        function showLongevityTip() {
+            const modal = document.getElementById('myModal');
+            const message = document.getElementById('modalMessage');
+            message.textContent = '笑口常开、保持开心';
+            modal.style.display = 'block';
+
+            // 获取关闭按钮并添加关闭事件
+            const closeBtn = document.getElementsByClassName('close')[0];
+            closeBtn.onclick = function () {
+                modal.style.display = 'none';
+            }
+
+            // 点击模态框外部关闭模态框
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
+    
